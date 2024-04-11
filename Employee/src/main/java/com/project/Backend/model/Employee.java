@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -37,8 +36,16 @@ public class Employee {
 		
 	}
 
+	public Employee(long empId, String firstName, String lastName, String emailId, String name, String title) {
+		this.empId = empId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.department = new Department(name);
+		this.position = new Position(title);
+	}
+	
 	public Employee(long empId, String firstName, String lastName, String emailId) {
-		
 		this.empId = empId;
 		this.firstName = firstName;
 		this.lastName = lastName;

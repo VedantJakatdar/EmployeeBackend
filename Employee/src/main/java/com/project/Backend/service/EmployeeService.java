@@ -31,26 +31,30 @@ public class EmployeeService {
 	}
 	
 	public Employee addEmployee(Employee employee) {
-		   
-//			Department existingDepartment = departmentRepository.findById(employee.getDepartment().getId()).orElse(null);
-			Department existingDepartment = departmentRepository.findByname(employee.getDepartment().getName());
-	        if (existingDepartment != null) { 
-	            employee.setDepartment(existingDepartment);
-	        } else {
-	            Department newDepartment = employee.getDepartment();
-	            employee.setDepartment(newDepartment);
-	        }
-
-//	        Position existingPosition = positionRepository.findById(employee.getPosition().getId()).orElse(null);
-	        Position existingPosition = positionRepository.findBytitle(employee.getPosition().getTitle());
-	        if (existingPosition != null) {
-	            employee.setPosition(existingPosition);
-	        } else {
-	            Position newPosition = employee.getPosition();
-	            employee.setPosition(newPosition);
-	        }
-	        
-		return	repo.save(employee);
+		   	
+		Employee existingEmp = repo.findById(employee.getEmpId()).orElse(null);
+		   	if(existingEmp == null) {
+		   		
+		   		Department existingDepartment = departmentRepository.findByname(employee.getDepartment().getName());
+		        if (existingDepartment != null) { 
+		            employee.setDepartment(existingDepartment);
+		        } else {
+		            Department newDepartment = employee.getDepartment();
+		            employee.setDepartment(newDepartment);
+		        }
+		        
+		        Position existingPosition = positionRepository.findBytitle(employee.getPosition().getTitle());
+		        if (existingPosition != null) {
+		            employee.setPosition(existingPosition);
+		        } else {
+		            Position newPosition = employee.getPosition();
+		            employee.setPosition(newPosition);
+		        }
+		        return	repo.save(employee);
+		   	}else {
+				return null;
+			}
+	       
 	}
 	
 	public Employee viewEmployee(long postId) {
@@ -90,11 +94,18 @@ public class EmployeeService {
             return null;
         }
 	}
-	
-	
+		
 	public void deleteEmployee(long postId) {
 		repo.deleteById(postId);
 	}
+	
+	public List<Employee> searchByDepartmentName(String department) {
+		return repo.findByDepartmentName(department);
+	}
+
+	public List<Employee> searchByPositionTitle(String position) {
+		return repo.findByPositionTitle(position);
+	}	
 	
 	public List<Employee> load() {
 		List<Employee> employees = new ArrayList<Employee>(Arrays.asList(
@@ -108,9 +119,5 @@ public class EmployeeService {
 				
 		return repo.saveAll(employees);
 	}
-
-	public List<Employee> searchByKeyword(String firstName) {
-		return repo.findByfirstNameContaining(firstName);
-	}	
-
+	
 }

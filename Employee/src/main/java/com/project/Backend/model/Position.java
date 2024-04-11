@@ -16,6 +16,14 @@ public class Position {
     
     private String title;
 
+    public Position() {
+    	
+    }
+    
+    public Position(String title) {
+    	this.title = title;
+    }
+    
 	public Long getId() {
 		return id;
 	}
