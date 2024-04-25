@@ -1,8 +1,7 @@
 package com.project.Backend.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Service;
@@ -11,14 +10,14 @@ import com.project.Backend.model.Position;
 import com.project.Backend.model.Department;
 import com.project.Backend.model.Employee;
 import com.project.Backend.repository.DepartmentRepository;
-import com.project.Backend.repository.EmployeeRepo;
+import com.project.Backend.repository.EmployeeRepository;
 import com.project.Backend.repository.PositionRepository;
 
 @Service
 public class EmployeeService {
 
 	@Autowired
-	private EmployeeRepo repo;
+	private EmployeeRepository employeeRepository;
 	
 	@Autowired
 	private DepartmentRepository departmentRepository;
@@ -27,47 +26,43 @@ public class EmployeeService {
 	private PositionRepository positionRepository;
 	
 	public List<Employee> viewAllEmployees() {
-		return repo.findAll();
+		return employeeRepository.findAll();
+	}
+	
+	public Employee viewEmployee(long postId) {
+		return employeeRepository.findById(postId).orElse(null);
 	}
 	
 	public Employee addEmployee(Employee employee) {
-		   	
-		Employee existingEmp = repo.findById(employee.getEmpId()).orElse(null);
-		   	if(existingEmp == null) {
 		   		
-		   		Department existingDepartment = departmentRepository.findByname(employee.getDepartment().getName());
-		        if (existingDepartment != null) { 
+		Department existingDepartment = departmentRepository.findByname(employee.getDepartment().getName());
+		        
+				if (existingDepartment != null) { 
 		            employee.setDepartment(existingDepartment);
 		        } else {
 		            Department newDepartment = employee.getDepartment();
 		            employee.setDepartment(newDepartment);
 		        }
 		        
-		        Position existingPosition = positionRepository.findBytitle(employee.getPosition().getTitle());
-		        if (existingPosition != null) {
+		Position existingPosition = positionRepository.findBytitle(employee.getPosition().getTitle());
+		        
+				if (existingPosition != null) {
 		            employee.setPosition(existingPosition);
 		        } else {
 		            Position newPosition = employee.getPosition();
 		            employee.setPosition(newPosition);
 		        }
-		        return	repo.save(employee);
-		   	}else {
-				return null;
-			}
+		        
+		        return	employeeRepository.save(employee);
 	       
-	}
-	
-	public Employee viewEmployee(long postId) {
-		return repo.findById(postId).orElse(null);
 	}
 	
 	public Employee updateEmployee(Employee employee,long id) {
 		
-		Employee employee1 = repo.findById(id).orElse(null);
+		Employee employee1 = employeeRepository.findById(id).orElse(null);
         
 		if (employee1 != null) {
             // Update basic employee information
-            employee1.setEmpId(employee.getEmpId());
             employee1.setFirstName(employee.getFirstName());
             employee1.setLastName(employee.getLastName());
             employee1.setEmailId(employee.getEmailId());
@@ -88,36 +83,33 @@ public class EmployeeService {
 	            employee1.setPosition(newPosition);
 	        }
 
-            return repo.save(employee1);
-        } else {
-        	
+            return employeeRepository.save(employee1);
+        } 
+		else {   	
             return null;
         }
 	}
 		
 	public void deleteEmployee(long postId) {
-		repo.deleteById(postId);
+		employeeRepository.deleteById(postId);
 	}
 	
 	public List<Employee> searchByDepartmentName(String department) {
-		return repo.findByDepartmentName(department);
+		return employeeRepository.findByDepartmentName(department);
 	}
 
 	public List<Employee> searchByPositionTitle(String position) {
-		return repo.findByPositionTitle(position);
+		return employeeRepository.findByPositionTitle(position);
 	}	
 	
-	public List<Employee> load() {
-		List<Employee> employees = new ArrayList<Employee>(Arrays.asList(
-				
-						new Employee(1,"Vedant","Jakatdar","vedant@tcs.com"),
-						new Employee(2,"Shubham","Jadhav","shubham@capgemini.com"),
-						new Employee(3,"Sandip","Khaire","sandip@polycab.com"),
-						new Employee(4,"Rohan","Chavan","rohan@hdfc.com")
-				
-				));
-				
-		return repo.saveAll(employees);
+	public List<String> getAllDepartmentNames() {
+		List<Department> departments = departmentRepository.findAll();
+        return departments.stream().map(Department::getName).collect(Collectors.toList());
+	}
+
+	public List<String> getAllPositionNames() {
+		List<Position> positions = positionRepository.findAll();
+        return positions.stream().map(Position::getTitle).collect(Collectors.toList());
 	}
 	
 }

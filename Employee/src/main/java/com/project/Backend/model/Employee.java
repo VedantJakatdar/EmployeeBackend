@@ -1,9 +1,10 @@
 package com.project.Backend.model;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -15,6 +16,7 @@ import lombok.Data;
 public class Employee {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long empId;
 	
 	@Column(name="first_name")
@@ -26,18 +28,17 @@ public class Employee {
 	@Column(name="email_id", nullable = true, unique = true)
 	private String emailId;
 	
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Department department;
 	    
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Position position;
 	
 	public Employee() {
 		
 	}
 
-	public Employee(long empId, String firstName, String lastName, String emailId, String name, String title) {
-		this.empId = empId;
+	public Employee(String firstName, String lastName, String emailId, String name, String title) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailId = emailId;
@@ -45,13 +46,6 @@ public class Employee {
 		this.position = new Position(title);
 	}
 	
-	public Employee(long empId, String firstName, String lastName, String emailId) {
-		this.empId = empId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.emailId = emailId;
-	}
-
 	public long getEmpId() {
 		return empId;
 	}

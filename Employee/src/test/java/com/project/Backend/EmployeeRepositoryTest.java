@@ -8,45 +8,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.project.Backend.model.Employee;
-import com.project.Backend.repository.EmployeeRepo;
+import com.project.Backend.service.EmployeeService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EmployeeRepositoryTest {
-
-    @Autowired
-    private EmployeeRepo employeeRepository;
     
-    Employee newEmployee = new Employee(12, "John", "Doe", "john@example.com", "Engineering", "Software Engineer");
-
+	@Autowired
+    private EmployeeService employeeService;
+	
+	Employee newEmployee = new Employee("Lal", "Killa", "lal@killa.com", "Mechanical", "Mechanical Engg");
+	
+	static long empId;
+	
     @Test
     @Order(1)
     public void testSaveEmployee() {
         // Test for saving an employee
-	    Employee savedEmployee = employeeRepository.save(newEmployee);
-	    assertEquals("John", savedEmployee.getFirstName());  
+    	Employee savedEmployee = employeeService.addEmployee(newEmployee);
+    	empId = savedEmployee.getEmpId();
+    	assertEquals(newEmployee.getFirstName(), savedEmployee.getFirstName());
+    	assertEquals(newEmployee.getLastName(), savedEmployee.getLastName());
+    	assertEquals(newEmployee.getEmailId(), savedEmployee.getEmailId());
     }
 
     @Test
     @Order(2)
     public void testFindById() {
         // Test for finding an employee by ID
-        Optional<Employee> optionalEmployee = employeeRepository.findById(newEmployee.getEmpId());
-        assertTrue(optionalEmployee.isPresent());
-        assertEquals("John", optionalEmployee.get().getFirstName());
+    	Employee viewEmployee = employeeService.viewEmployee(EmployeeRepositoryTest.empId);
+    	assertEquals(newEmployee.getFirstName(), viewEmployee.getFirstName());
+    	assertEquals(newEmployee.getLastName(), viewEmployee.getLastName());
+    	assertEquals(newEmployee.getEmailId(), viewEmployee.getEmailId());
     }
 
     @Test
     @Order(3)
     public void testDeleteEmployee() {
         // Test for deleting an employee
-        employeeRepository.deleteById(newEmployee.getEmpId());
-        assertFalse(employeeRepository.findById(newEmployee.getEmpId()).isPresent());
+    	employeeService.deleteEmployee(EmployeeRepositoryTest.empId);
+        Employee getEmployee = employeeService.viewEmployee(EmployeeRepositoryTest.empId);
+        assertNull(getEmployee);
     }
     
 }
