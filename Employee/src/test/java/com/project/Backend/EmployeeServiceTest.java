@@ -38,7 +38,7 @@ public class EmployeeServiceTest {
     @Order(1)
     public void testAddEmployee() {
     	
-    	Employee employee = new Employee("John", "Doe", "john.doe@example.com", "Robotics", "Robotics Engg");
+    	Employee employee = new Employee("Raj", "Kumar", "raj@kumar.com", "Robotics", "Robotics Engg");
         Department department = new Department(employee.getDepartment().getName());
         Position position = new Position(employee.getPosition().getTitle());
         
@@ -59,7 +59,7 @@ public class EmployeeServiceTest {
     @Order(2)
     public void testViewEmployee() {
     	
-        Employee employee = new Employee("Jane", "Doe", "jane.doe@example.com", "HR", "Manager");
+        Employee employee = new Employee("Eknath", "Shinde", "eknath@shinde.com", "HR", "Manager");
         employee.setEmpId(1L);
         when(employeeRepository.findById(employee.getEmpId())).thenReturn(Optional.of(employee));
 
@@ -76,7 +76,7 @@ public class EmployeeServiceTest {
     @Order(3)
     public void testDeleteEmployee() {
     	
-        Employee employee = new Employee("Jane", "Doe", "jane.doe@example.com", "HR", "Manager");
+        Employee employee = new Employee("Nitin", "Gadkari", "nitin@gadkari.com", "HR", "Manager");
         employee.setEmpId(1L);
 
         when(employeeRepository.findById(employee.getEmpId())).thenReturn(Optional.of(employee));
