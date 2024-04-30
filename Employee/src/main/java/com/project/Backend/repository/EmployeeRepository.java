@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.project.Backend.model.Employee;
 
 @Repository
-public interface EmployeeRepo extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	
 	public List<Employee> findByDepartmentName(String department);
 	
 	public List<Employee> findByPositionTitle(String position);
+
 }

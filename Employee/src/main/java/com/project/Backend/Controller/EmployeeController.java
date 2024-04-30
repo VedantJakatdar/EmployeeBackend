@@ -1,7 +1,6 @@
 package com.project.Backend.Controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.Backend.model.Department;
-import com.project.Backend.model.Position;
 import com.project.Backend.model.Employee;
-import com.project.Backend.repository.DepartmentRepository;
-import com.project.Backend.repository.PositionRepository;
 import com.project.Backend.service.EmployeeService;
 
 @RestController
@@ -28,12 +23,6 @@ public class EmployeeController {
 	
 	@Autowired
 	private	EmployeeService employeeService;
-	
-	@Autowired
-    private DepartmentRepository departmentRepository;
-
-    @Autowired
-    private PositionRepository positionRepository;
 	
 	//viewAllEmployees
 	@GetMapping
@@ -80,24 +69,16 @@ public class EmployeeController {
 		return employeeService.searchByPositionTitle(position);
 	}
 	
-	//forLoadingDataToDatabase
-	@GetMapping("load")
-	public List<Employee> load() {
-		return employeeService.load();
-	}
-	
 	//forGettingAllDepartmentsNames
 	@GetMapping("/departments")
     public List<String> getDepartmentNames() {
-        List<Department> departments = departmentRepository.findAll();
-        return departments.stream().map(Department::getName).collect(Collectors.toList());
+		return employeeService.getAllDepartmentNames();
     }
 
 	//forGettingAllPositionsNames
     @GetMapping("/positions")
     public List<String> getPositionTitles() {
-        List<Position> positions = positionRepository.findAll();
-        return positions.stream().map(Position::getTitle).collect(Collectors.toList());
+    	return employeeService.getAllPositionNames();
     }
 	
 }
